@@ -7,8 +7,10 @@ import './index.css';
 
 const DEFAULT_TEMPLATE = '// Paste your legacy C code here\n#include <stdio.h>\n#include <time.h>\n\nint main() {\n    time_t current_time;\n    long old_timestamp;\n    return 0;\n}';
 
+// This automatically connects to your live Render server!
+const BACKEND_URL = 'https://epochguard.onrender.com';
+
 function App() {
-  // 1. Load saved code from local storage on startup, or fallback to the template
   const [code, setCode] = useState(() => {
     return localStorage.getItem('y2k38_saved_code') || DEFAULT_TEMPLATE;
   });
@@ -21,12 +23,10 @@ function App() {
     editorRef.current = editor;
   };
 
-  // 2. Quietly keep the browser's local memory updated so you never lose your progress
   useEffect(() => {
     localStorage.setItem('y2k38_saved_code', code);
   }, [code]);
 
-  // 3. ON-DEMAND SCAN: This runs ONLY when clicking the manual button
   const handleScan = async () => {
     if (!code.trim()) {
       setVulnerabilities([]);
@@ -35,7 +35,8 @@ function App() {
 
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/scan', { code });
+      // Points directly to Render
+      const res = await axios.post(`${BACKEND_URL}/api/scan`, { code });
       setVulnerabilities(res.data.vulnerabilities);
       
       if (editorRef.current && window.monaco) {
@@ -69,7 +70,8 @@ function App() {
 
   const handleFixAI = async (issue) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/fix', {
+      // Points directly to Render
+      const res = await axios.post(`${BACKEND_URL}/api/fix`, {
         codeSnippet: issue.codeSnippet
       });
       
