@@ -32,8 +32,8 @@ const analyzeAST = async (req, res) => {
                 const typeNode = node.childForFieldName('type');
                 if (typeNode) {
                     const typeText = typeNode.text;
-                    // Detect 32-bit legacy types
-                    if (typeText === 'int' || typeText === 'long' || typeText === 'time_t') {
+                    // Detect 32-bit legacy types INCLUDING stdint.h types
+                    if (typeText === 'int' || typeText === 'long' || typeText === 'time_t' || typeText === 'int32_t' || typeText === 'uint32_t') {
                         vulnerabilities.push({
                             id: Math.random().toString(36).substring(2, 9),
                             line: node.startPosition.row + 1, // Monaco 1-based indexing
