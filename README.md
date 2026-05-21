@@ -34,7 +34,7 @@ If you wish to run this project locally, ensure you have Node.js installed and a
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/YOUR_USERNAME/y2k38-analyzer.git](https://github.com/YOUR_USERNAME/y2k38-analyzer.git)
+git clone - https://github.com/rajbundela931/EpochGuard
 cd y2k38-analyzer
 
 
@@ -76,10 +76,3 @@ Navigate to http://localhost:5173 in your browser to use the tool!
 📜 License
 This project is open-source and available under the MIT License.
 ***
-
-### Final Checklist for your GitHub Profile:
-1. Make sure to replace `YOUR_USERNAME` in the clone link with your actual GitHub username.
-2. Once you successfully deploy the project to Vercel and Render, update the **Live Demo** links at the top of the README. 
-3. (Optional but highly recommended) Record a 15-second screen capture of the tool scanning and fixing code, convert it to a `.gif`, and drop it right below the title in the README!
-
-Is there anything else you want to tweak or add before you make your repository public?
