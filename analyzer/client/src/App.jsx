@@ -11,8 +11,9 @@ const DEFAULT_TEMPLATE = '// Paste your legacy C code here\n#include <stdio.h>\n
 const BACKEND_URL = 'https://epochguard.onrender.com';
 
 function App() {
+  // CHANGED: Now uses sessionStorage so new tabs start fresh
   const [code, setCode] = useState(() => {
-    return localStorage.getItem('y2k38_saved_code') || DEFAULT_TEMPLATE;
+    return sessionStorage.getItem('y2k38_saved_code') || DEFAULT_TEMPLATE;
   });
   
   const [vulnerabilities, setVulnerabilities] = useState([]);
@@ -23,9 +24,19 @@ function App() {
     editorRef.current = editor;
   };
 
+  // CHANGED: Now uses sessionStorage 
   useEffect(() => {
-    localStorage.setItem('y2k38_saved_code', code);
+    sessionStorage.setItem('y2k38_saved_code', code);
   }, [code]);
+
+  // NEW: Instantly resets the editor back to the default state
+  const handleReset = () => {
+    setCode(DEFAULT_TEMPLATE);
+    setVulnerabilities([]);
+    if (editorRef.current && window.monaco) {
+      window.monaco.editor.setModelMarkers(editorRef.current.getModel(), "owner", []);
+    }
+  };
 
   const handleScan = async () => {
     if (!code.trim()) {
@@ -35,7 +46,6 @@ function App() {
 
     setLoading(true);
     try {
-      // Points directly to Render
       const res = await axios.post(`${BACKEND_URL}/api/scan`, { code });
       setVulnerabilities(res.data.vulnerabilities);
       
@@ -70,7 +80,6 @@ function App() {
 
   const handleFixAI = async (issue) => {
     try {
-      // Points directly to Render
       const res = await axios.post(`${BACKEND_URL}/api/fix`, {
         codeSnippet: issue.codeSnippet
       });
@@ -104,7 +113,8 @@ function App() {
   return (
     <div className="app-container">
       <div className="editor-pane">
-        <Toolbar onScan={handleScan} loading={loading} />
+        {/* CHANGED: Passed the new handleReset function to the Toolbar */}
+        <Toolbar onScan={handleScan} onReset={handleReset} loading={loading} />
         <CodeEditor code={code} setCode={setCode} onMount={handleEditorDidMount} />
       </div>
       <IssuePanel 
