@@ -1,0 +1,11 @@
+# Frontend dependencies and build output
+node_modules/
+dist/
+dist-ssr/
+
+# Local environment files
+.env
+.env.local
+
+# Logs
+npm-debug.log*
